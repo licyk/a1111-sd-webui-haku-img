@@ -289,13 +289,16 @@ def add_tab():
 
                             with gr.TabItem("PixelOE", elem_id="haku_PixelOE"):
                                 poe_target_size = gr.Slider(
-                                    2, 1024, 256, step=1, label="target size"
+                                    0, 1024, 256, step=1, label="target size"
                                 )
                                 poe_patch_size = gr.Slider(
-                                    2, 256, 8, step=1, label="patch size"
+                                    0, 1024, 8, step=1, label="patch size"
+                                )
+                                poe_pixel_size = gr.Slider(
+                                    0, 1024, 0, step=1, label="pixel size"
                                 )
                                 poe_thickness = gr.Slider(
-                                    2, 256, 2, step=1, label="thickness"
+                                    0, 256, 2, step=1, label="thickness"
                                 )
                                 poe_colors = gr.Slider(
                                     0, 256, 0, step=1, label="colors"
@@ -312,7 +315,13 @@ def add_tab():
                                     value="contrast",
                                     label="downscale mode",
                                 )
+                                poe_color_quant_methon = gr.Radio(
+                                    ["kmeans", "maxcover"],
+                                    value="kmeans",
+                                    label="color quant method",
+                                )
                                 poe_color_matching = gr.Checkbox(label="color matching", value=True)
+                                poe_color_with_weight = gr.Checkbox(label="color with weight", value=False)
                                 poe_no_upscale = gr.Checkbox(label="no upscale", value=False)
                                 poe_no_downscale = gr.Checkbox(label="no downscale", value=False)
 
@@ -572,12 +581,15 @@ def add_tab():
         all_poe_set = [
             poe_target_size,
             poe_patch_size,
+            poe_pixel_size,
             poe_thickness,
             poe_colors,
             poe_contrast,
             poe_saturation,
             poe_mode,
+            poe_color_quant_methon,
             poe_color_matching,
+            poe_color_with_weight,
             poe_no_upscale,
             poe_no_downscale,
         ]
@@ -585,7 +597,7 @@ def add_tab():
         for component in all_poe_set:
             _release_if_possible(component, pixeloe.run, all_poe_input, image_out)
         pixeloe_btn.click(pixeloe.run, all_poe_input, image_out)
-        pixeloe_rst_btn.click(lambda: [256, 8, 2, 0, 1.0, 1.0, "constrast", True, False, False], None, all_poe_set)
+        pixeloe_rst_btn.click(lambda: [256, 8, 0, 2, 0, 1.0, 1.0, "constrast", "kmeans", True, False, False, False], None, all_poe_set)
 
         # neon
         all_neon_set = [
